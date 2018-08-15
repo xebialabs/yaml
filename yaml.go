@@ -117,16 +117,16 @@ func (dec *Decoder) SetStrict(strict bool) {
 // See the documentation for Unmarshal for details about the
 // conversion of YAML into a Go value.
 func (dec *Decoder) Decode(v interface{}) (err error) {
-	_, e := dec.DecodeWithLineNumber(v)
+	_, _, e := dec.DecodeWithPosition(v)
 	return e
 }
 
-func (dec *Decoder) DecodeWithLineNumber(v interface{}) (line int, err error) {
+func (dec *Decoder) DecodeWithPosition(v interface{}) (line int, column int, err error) {
 	d := newDecoder(dec.strict)
 	defer handleErr(&err)
 	node := dec.parser.parse()
 	if node == nil {
-		return 0, io.EOF
+		return 0, 0, io.EOF
 	}
 	out := reflect.ValueOf(v)
 	if out.Kind() == reflect.Ptr && !out.IsNil() {
@@ -134,9 +134,9 @@ func (dec *Decoder) DecodeWithLineNumber(v interface{}) (line int, err error) {
 	}
 	d.unmarshal(node, out)
 	if len(d.terrors) > 0 {
-		return node.line, &TypeError{d.terrors}
+		return node.line, node.column, &TypeError{d.terrors}
 	}
-	return node.line, nil
+	return node.line, node.column, nil
 }
 
 func unmarshal(in []byte, out interface{}, strict bool) (err error) {
