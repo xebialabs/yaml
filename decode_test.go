@@ -419,10 +419,14 @@ var unmarshalTests = []struct {
 		map[string]interface{}{"v": 1},
 	},
 
-	// Custom tags.
+	// Custom tags
 	{
-		"%TAG ! tag:xebialabs.com,2018:\n---\n!file filename.txt",
-		yaml.CustomTag{"xebialabs.com,2018:file", "filename.txt"},
+		"%TAG !x! tag:xebialabs.com,2018:\n---\n!x!file filename.txt",
+		yaml.CustomTag{"tag:xebialabs.com,2018:file", "filename.txt"},
+	},
+	{
+		"!secret p3ssw0rd",
+		yaml.CustomTag{"!secret", "p3ssw0rd"},
 	},
 
 	// Non-specific tag (Issue #75)

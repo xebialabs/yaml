@@ -85,8 +85,9 @@ var yamlStyleFloat = regexp.MustCompile(`^[-+]?[0-9]*\.?[0-9]+([eE][-+][0-9]+)?$
 
 func resolve(tag string, in string) (rtag string, out interface{}) {
 	if !resolvableTag(tag) {
-		if strings.HasPrefix(tag, "tag:") && !strings.HasPrefix(tag, "tag:yaml.org,2002:") {
-			return yaml_STR_TAG, CustomTag{tag[4:], in}
+		if strings.HasPrefix(tag, "tag:") && !strings.HasPrefix(tag, "tag:yaml.org,2002:") ||
+			strings.HasPrefix(tag, "!") && tag != "!" {
+			return yaml_STR_TAG, CustomTag{tag, in}
 		} else {
 			return tag, in
 		}
