@@ -367,6 +367,16 @@ var marshalTests = []struct {
 		map[string]string{"a": "你好 #comment"},
 		"a: '你好 #comment'\n",
 	},
+
+	// Custom tags
+	{
+		yaml.CustomTag{"!secret", "p3ssw0rd"},
+		"!secret p3ssw0rd\n",
+	},
+	{
+		yaml.CustomTag{"tag:xebialabs.com,2018:file", "filename.txt"},
+		"!<tag:xebialabs.com,2018:file> filename.txt\n",
+	},
 }
 
 func (s *S) TestMarshal(c *C) {

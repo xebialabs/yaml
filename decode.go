@@ -237,6 +237,7 @@ var (
 	defaultMapType = reflect.TypeOf(map[interface{}]interface{}{})
 	ifaceType      = defaultMapType.Elem()
 	timeType       = reflect.TypeOf(time.Time{})
+	customTagType  = reflect.TypeOf(CustomTag{})
 	ptrTimeType    = reflect.TypeOf(&time.Time{})
 )
 

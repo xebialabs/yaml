@@ -421,12 +421,16 @@ var unmarshalTests = []struct {
 
 	// Custom tags
 	{
-		"%TAG !x! tag:xebialabs.com,2018:\n---\n!x!file filename.txt",
+		"!secret p3ssw0rd",
+		yaml.CustomTag{"!secret", "p3ssw0rd"},
+	},
+	{
+		"!<tag:xebialabs.com,2018:file> filename.txt",
 		yaml.CustomTag{"tag:xebialabs.com,2018:file", "filename.txt"},
 	},
 	{
-		"!secret p3ssw0rd",
-		yaml.CustomTag{"!secret", "p3ssw0rd"},
+		"%TAG !x! tag:xebialabs.com,2018:\n---\n!x!file filename.txt",
+		yaml.CustomTag{"tag:xebialabs.com,2018:file", "filename.txt"},
 	},
 
 	// Non-specific tag (Issue #75)

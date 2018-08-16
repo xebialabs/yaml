@@ -128,6 +128,8 @@ func (e *encoder) marshal(tag string, in reflect.Value) {
 	case reflect.Struct:
 		if in.Type() == timeType {
 			e.timev(tag, in)
+		} else if in.Type() == customTagType {
+			e.customtagv(tag, in)
 		} else {
 			e.structv(tag, in)
 		}
@@ -330,6 +332,12 @@ func (e *encoder) timev(tag string, in reflect.Value) {
 	t := in.Interface().(time.Time)
 	s := t.Format(time.RFC3339Nano)
 	e.emitScalar(s, "", tag, yaml_PLAIN_SCALAR_STYLE)
+}
+
+func (e *encoder) customtagv(tag string, in reflect.Value) {
+	inTag := in.FieldByName("Tag").String()
+	inValue := in.FieldByName("Value").String()
+	e.emitScalar(inValue, "", inTag, yaml_PLAIN_SCALAR_STYLE)
 }
 
 func (e *encoder) floatv(tag string, in reflect.Value) {
